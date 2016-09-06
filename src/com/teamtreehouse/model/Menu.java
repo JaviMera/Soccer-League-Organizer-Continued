@@ -17,7 +17,10 @@ public class Menu {
         mPrompter = new Prompter(stream);
         mOptions = new TreeMap<>();
         mOptions.put("1", "Create new team.");
-        mOptions.put("2", "Exit");
+        mOptions.put("2", "Remove player from team");
+        mOptions.put("3", "View team report");
+        mOptions.put("4", "View league balance report");
+        mOptions.put("5", "Exit");
     }
 
     public void displayOptions()

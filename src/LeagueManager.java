@@ -65,6 +65,8 @@ public class LeagueManager {
                     }
                     break;
                 case 4:
+                    Team team = selectTeam(teams, leagueMenu);
+                    leagueMenu.displayTeamReport(team);
                     break;
                 case 5:
                     break;

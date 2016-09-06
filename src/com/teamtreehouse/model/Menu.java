@@ -4,10 +4,7 @@ import com.mera.model.Team;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * Created by Javi on 9/5/2016.
@@ -126,5 +123,23 @@ public class Menu {
             ".");
 
         mPrompter.display("\n");
+    }
+
+    public void displayTeamReport(Team team) {
+
+        mPrompter.display("Viewing a report for " + team.getName());
+
+        List<Player> playersByHeight = team.groupByHeight();
+
+        playersByHeight.forEach(player -> {
+            mPrompter.display(
+                player.getFirstName() +
+                " " +
+                player.getLastName() +
+                "\t" +
+                player.getHeightInInches());
+
+            mPrompter.display("\n");
+        });
     }
 }

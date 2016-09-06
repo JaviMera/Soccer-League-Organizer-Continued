@@ -1,6 +1,9 @@
 package com.teamtreehouse.model;
 
+import com.mera.model.Team;
+
 import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -12,8 +15,7 @@ public class Menu {
     private Map<String, String> mOptions;
     private Prompter mPrompter;
 
-    public Menu(InputStream stream)
-    {
+    public Menu(InputStream stream) {
         mPrompter = new Prompter(stream);
         mOptions = new TreeMap<>();
         mOptions.put("1", "Create new team.");
@@ -23,19 +25,43 @@ public class Menu {
         mOptions.put("5", "Exit");
     }
 
-    public void displayOptions()
+    public void displayTitle()
     {
-        System.out.println("***** WELCOME TO THE AMAZING SOCCER LEAGUE *****");
-        System.out.println();
-        System.out.println();
+        mPrompter.display("***** WELCOME TO THE AMAZING SOCCER LEAGUE *****");
+        mPrompter.display("\n");
+    }
+
+    public void displayOptions() {
         mOptions.forEach((menuOption, optionDescription) -> {
-            System.out.println(menuOption + ") " + optionDescription);
+            mPrompter.display(menuOption + ") " + optionDescription);
+            mPrompter.display("\n");
         });
     }
 
-    public int getOption(String message)
-    {
+    public int getOption(String message) {
         mPrompter.display(message);
         return mPrompter.getInt();
+    }
+
+    public String getName(String message) {
+        mPrompter.display(message);
+        return mPrompter.getString();
+    }
+
+    public void displayTeams(Map<Integer, Team> teams) {
+
+        if(teams.isEmpty())
+        {
+            mPrompter.display("There are currently no teams in the league.");
+            mPrompter.display("\n");
+            return;
+        }
+
+        mPrompter.display("Available Teams:");
+        mPrompter.display("\n");
+        teams.forEach((number, team) -> {
+            mPrompter.display(number + ") " + team.getName());
+            mPrompter.display("\n");
+        });
     }
 }

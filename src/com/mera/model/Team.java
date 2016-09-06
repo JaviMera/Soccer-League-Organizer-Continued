@@ -8,7 +8,7 @@ import java.util.Set;
 /**
  * Created by Javi on 9/6/2016.
  */
-public class Team {
+public class Team implements Comparable<Team>{
 
     private String mName;
     private String mCoach;
@@ -37,5 +37,20 @@ public class Team {
     public Set<Player> getPlayers()
     {
         return mPlayers;
+    }
+
+    @Override
+    public int compareTo(Team otherTeam) {
+
+        if(mName.compareTo(otherTeam.getName()) > 0)
+        {
+            return 1;
+        }
+        else if (mName.compareTo(otherTeam.getName()) < 0)
+        {
+            return -1;
+        }
+
+        return 0;
     }
 }

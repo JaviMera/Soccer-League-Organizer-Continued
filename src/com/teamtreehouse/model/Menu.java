@@ -4,7 +4,9 @@ import com.mera.model.Team;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 /**
@@ -72,18 +74,17 @@ public class Menu {
 
     public void displayTeams(Map<Integer, Team> teams) {
 
-        if(teams.isEmpty())
-        {
-            mPrompter.display("There are currently no teams in the league.");
-            mPrompter.display("\n");
-            return;
-        }
-
         mPrompter.display("Available Teams:");
         mPrompter.display("\n");
         teams.forEach((number, team) -> {
             mPrompter.display(number + ") " + team.getName());
             mPrompter.display("\n");
         });
+    }
+
+    public void displayEmptyTeamTitle() {
+
+        mPrompter.display("There are currently no teams in the league.");
+        mPrompter.display("\n");
     }
 }

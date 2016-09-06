@@ -17,6 +17,7 @@ public class Team implements Comparable<Team>{
     private String mName;
     private String mCoach;
     private Set<Player> mPlayers;
+    private String unexperiencedPlayersCount;
 
     public Team(String name, String coach)
     {
@@ -69,5 +70,19 @@ public class Team implements Comparable<Team>{
         Collections.sort(playersByHeight, new HeightComparator());
 
         return playersByHeight;
+    }
+
+    public long getExperiencedPlayersCount()
+    {
+        return mPlayers.stream()
+                .filter(player -> player.isPreviousExperience())
+                .count();
+    }
+
+    public long getUnexperiencedPlayersCount() {
+
+        return mPlayers.stream()
+                .filter(player -> !player.isPreviousExperience())
+                .count();
     }
 }

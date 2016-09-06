@@ -68,6 +68,7 @@ public class LeagueManager {
                     leagueMenu.displayTeamReport(team);
                     break;
                 case 5:
+                    leagueMenu.displayLeagueBalanceReport(teams);
                     break;
                 case 6:
                     System.out.println("Exiting...");

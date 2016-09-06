@@ -128,6 +128,7 @@ public class Menu {
     public void displayTeamReport(Team team) {
 
         mPrompter.display("Viewing a report for " + team.getName());
+        mPrompter.display("\n");
 
         List<Player> playersByHeight = team.groupByHeight();
 
@@ -141,5 +142,13 @@ public class Menu {
 
             mPrompter.display("\n");
         });
+    }
+
+    public void displayLeagueBalanceReport(Set<Team> teams) {
+
+        mPrompter.display("League Balance Report");
+        mPrompter.display("\n");
+
+        teams.forEach(team -> mPrompter.display(team.getName() + " " + team.getExperiencedPlayersCount() + " " + team.getUnexperiencedPlayersCount()));
     }
 }

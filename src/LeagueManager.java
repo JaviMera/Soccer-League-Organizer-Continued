@@ -33,7 +33,6 @@ public class LeagueManager {
                     teams.add(new Team(teamName, coachName));
 
                     break;
-
                 case 2:
                     if(teams.isEmpty()) {
 

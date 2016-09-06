@@ -4,7 +4,10 @@ import com.teamtreehouse.model.Player;
 import com.teamtreehouse.model.Players;
 
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.Map;
 
 public class LeagueManager {
 
@@ -38,26 +41,34 @@ public class LeagueManager {
                     }
                     else {
 
-                        Map<Integer, Team> numberedTeams = createTeamsMap(teams);
-                        leagueMenu.displayTeams(numberedTeams);
-                        int teamSelected = leagueMenu.getOption("Select a team: ");
+                        Team team = selectTeam(teams, leagueMenu);
 
                         Set<Player> orderedPlayers = sortPlayersByName(players);
-                        Map<Integer, Player> numberedPlayers = createPlayerMap(orderedPlayers);
-                        leagueMenu.displayPlayers(numberedPlayers);
-                        int playerSelected = leagueMenu.getOption("Select a player: ");
+                        Player player = selectPlayer(orderedPlayers, leagueMenu);
 
-                        Team team = numberedTeams.get(teamSelected);
-                        Player player = numberedPlayers.get(playerSelected);
-
-                        team.addPlayer(player);
                         leagueMenu.displayAddedPlayer(player, team);
+                        team.addPlayer(player);
                     }
                     break;
                 case 3:
+                    if(teams.isEmpty()) {
 
+                        leagueMenu.displayEmptyTeamTitle();
+                    }
+                    else {
+
+                        Team team = selectTeam(teams, leagueMenu);
+                        Player player = selectPlayer(team.getPlayers(), leagueMenu);
+
+                        leagueMenu.displayRemovedPlayer(player, team);
+                        team.removePlayer(player);
+                    }
+                    break;
+                case 4:
                     break;
                 case 5:
+                    break;
+                case 6:
                     System.out.println("Exiting...");
                     break;
                 default:
@@ -65,6 +76,24 @@ public class LeagueManager {
                     break;
             }
         }while(optionSelected != 5);
+    }
+
+    private static Team selectTeam(Set<Team> teams, Menu leagueMenu)
+    {
+        Map<Integer, Team> numberedTeams = createTeamsMap(teams);
+        leagueMenu.displayTeams(numberedTeams);
+        int teamSelected = leagueMenu.getOption("Select a team: ");
+
+        return numberedTeams.get(teamSelected);
+    }
+
+    private static Player selectPlayer(Set<Player> players, Menu leagueMenu)
+    {
+        Map<Integer, Player> numberedPlayers = createPlayerMap(players);
+        leagueMenu.displayPlayers(numberedPlayers);
+        int playerSelected = leagueMenu.getOption("Select a player: ");
+
+        return numberedPlayers.get(playerSelected);
     }
 
     private static Set<Player> sortPlayersByName(Player[] players)

@@ -4,6 +4,7 @@ import com.teamtreehouse.model.Player;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Created by Javi on 9/6/2016.
@@ -18,7 +19,7 @@ public class Team implements Comparable<Team>{
     {
         mName = name;
         mCoach = coach;
-        mPlayers = new HashSet<>();
+        mPlayers = new TreeSet<>();
     }
 
     public String getName() {
@@ -52,5 +53,10 @@ public class Team implements Comparable<Team>{
         }
 
         return 0;
+    }
+
+    public void removePlayer(Player player) {
+
+        mPlayers.remove(player);
     }
 }

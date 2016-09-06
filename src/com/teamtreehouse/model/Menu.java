@@ -21,10 +21,11 @@ public class Menu {
         mPrompter = new Prompter(reader);
         mOptions = new TreeMap<>();
         mOptions.put("1", "Create new team.");
-        mOptions.put("2", "Add player from team");
-        mOptions.put("3", "View team report");
-        mOptions.put("4", "View league balance report");
-        mOptions.put("5", "Exit");
+        mOptions.put("2", "Add player to team");
+        mOptions.put("3", "Remove player from team");
+        mOptions.put("4", "View team report");
+        mOptions.put("5", "View league balance report");
+        mOptions.put("6", "Exit");
     }
 
     public void displayTitle()
@@ -103,12 +104,26 @@ public class Menu {
     public void displayAddedPlayer(Player player, Team team) {
 
         mPrompter.display(
+            "Adding " +
             player.getFirstName() +
             " " +
             player.getLastName() +
-            " was successfully added to " +
+            " to " +
             team.getName() +
             "!");
+
+        mPrompter.display("\n");
+    }
+
+    public void displayRemovedPlayer(Player player, Team team) {
+        mPrompter.display(
+            "Removing " +
+            player.getFirstName() +
+            " " +
+            player.getLastName() +
+            " from " +
+            team.getName() +
+            ".");
 
         mPrompter.display("\n");
     }

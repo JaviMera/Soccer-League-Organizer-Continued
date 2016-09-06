@@ -21,7 +21,7 @@ public class Menu {
         mPrompter = new Prompter(reader);
         mOptions = new TreeMap<>();
         mOptions.put("1", "Create new team.");
-        mOptions.put("2", "Remove player from team");
+        mOptions.put("2", "Add player from team");
         mOptions.put("3", "View team report");
         mOptions.put("4", "View league balance report");
         mOptions.put("5", "Exit");
@@ -85,6 +85,31 @@ public class Menu {
     public void displayEmptyTeamTitle() {
 
         mPrompter.display("There are currently no teams in the league.");
+        mPrompter.display("\n");
+    }
+
+    public void displayPlayers(Map<Integer, Player> numberedPlayers) {
+
+        mPrompter.display("Available Players:");
+        mPrompter.display("\n");
+        mPrompter.display("\n");
+
+        numberedPlayers.forEach((number, player) -> {
+            mPrompter.display(number + ") " + player.getLastName() + ", " + player.getFirstName() + '\t' + player.getHeightInInches());
+            mPrompter.display("\n");
+        });
+    }
+
+    public void displayAddedPlayer(Player player, Team team) {
+
+        mPrompter.display(
+            player.getFirstName() +
+            " " +
+            player.getLastName() +
+            " was successfully added to " +
+            team.getName() +
+            "!");
+
         mPrompter.display("\n");
     }
 }

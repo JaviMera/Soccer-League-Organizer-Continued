@@ -4,10 +4,7 @@ import com.teamtreehouse.model.Player;
 import com.teamtreehouse.model.Players;
 
 import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 public class LeagueManager {
 
@@ -41,8 +38,20 @@ public class LeagueManager {
                     }
                     else {
 
-                        Map<Integer, Team> numberedTeams = sortTeamsByName(teams);
+                        Map<Integer, Team> numberedTeams = createTeamsMap(teams);
                         leagueMenu.displayTeams(numberedTeams);
+                        int teamSelected = leagueMenu.getOption("Select a team: ");
+
+                        Set<Player> orderedPlayers = sortPlayersByName(players);
+                        Map<Integer, Player> numberedPlayers = createPlayerMap(orderedPlayers);
+                        leagueMenu.displayPlayers(numberedPlayers);
+                        int playerSelected = leagueMenu.getOption("Select a player: ");
+
+                        Team team = numberedTeams.get(teamSelected);
+                        Player player = numberedPlayers.get(playerSelected);
+
+                        team.addPlayer(player);
+                        leagueMenu.displayAddedPlayer(player, team);
                     }
                     break;
                 case 3:
@@ -58,7 +67,25 @@ public class LeagueManager {
         }while(optionSelected != 5);
     }
 
-    private static Map<Integer, Team> sortTeamsByName(Set<Team> teams)
+    private static Set<Player> sortPlayersByName(Player[] players)
+    {
+      Set<Player> orderedPlayers = new TreeSet<>();
+      for (Player player : players) {
+        orderedPlayers.add(player);
+      }
+
+      return orderedPlayers;
+    }
+
+    private static Map<Integer, Player> createPlayerMap(Set<Player> players)
+    {
+        Map<Integer, Player> numberedPlayers = new HashMap<>();
+        players.forEach(player -> numberedPlayers.put(numberedPlayers.size() + 1, player));
+
+        return numberedPlayers;
+    }
+
+    private static Map<Integer, Team> createTeamsMap(Set<Team> teams)
     {
         Map<Integer, Team> numberedTeams = new HashMap<>();
         teams.forEach(team -> numberedTeams.put(numberedTeams.size() + 1, team));

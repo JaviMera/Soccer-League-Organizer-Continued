@@ -2,8 +2,8 @@ package com.teamtreehouse.model;
 
 import com.mera.model.Team;
 
-import java.io.InputStream;
-import java.util.List;
+import java.io.IOException;
+import java.io.Reader;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -15,8 +15,8 @@ public class Menu {
     private Map<String, String> mOptions;
     private Prompter mPrompter;
 
-    public Menu(InputStream stream) {
-        mPrompter = new Prompter(stream);
+    public Menu(Reader reader) {
+        mPrompter = new Prompter(reader);
         mOptions = new TreeMap<>();
         mOptions.put("1", "Create new team.");
         mOptions.put("2", "Remove player from team");
@@ -39,13 +39,35 @@ public class Menu {
     }
 
     public int getOption(String message) {
+
         mPrompter.display(message);
-        return mPrompter.getInt();
+        try
+        {
+            return mPrompter.getInt();
+        }
+        catch(IOException ioe)
+        {
+            mPrompter.display("Error reading option from the menu.");
+            ioe.printStackTrace();
+        }
+
+        return -1;
     }
 
     public String getName(String message) {
+
         mPrompter.display(message);
-        return mPrompter.getString();
+        try
+        {
+            return mPrompter.getString();
+        }
+        catch(IOException ioe)
+        {
+            mPrompter.display("Error reading option from the menu.");
+            ioe.printStackTrace();
+        }
+
+        return null;
     }
 
     public void displayTeams(Map<Integer, Team> teams) {

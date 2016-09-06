@@ -4,13 +4,15 @@ import com.teamtreehouse.model.Menu;
 import com.teamtreehouse.model.Player;
 import com.teamtreehouse.model.Players;
 
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
 public class LeagueManager {
 
     public static void main(String[] args) {
-        Menu leagueMenu = new Menu(System.in);
+
+        Menu leagueMenu = new Menu(new InputStreamReader(System.in));
         Map<Integer, Team> teams = new HashMap<>();
         Player[] players = Players.load();
 
@@ -28,6 +30,7 @@ public class LeagueManager {
                     String teamName = leagueMenu.getName("Enter team name: ");
                     String coachName = leagueMenu.getName("Enter coach name: ");
                     teams.put(teams.size() + 1, new Team(teamName, coachName));
+
                     break;
 
                 case 2:

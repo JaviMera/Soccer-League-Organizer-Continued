@@ -1,14 +1,15 @@
 package com.teamtreehouse.model;
 
-import java.io.InputStream;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.Reader;
 
 public class Prompter {
 
-    private Scanner mScanner;
-    public Prompter(InputStream input)
+    private BufferedReader mReader;
+    public Prompter(Reader reader)
     {
-        mScanner = new Scanner(input);
+        mReader = new BufferedReader(reader);
     }
 
     public void display(String message)
@@ -16,22 +17,14 @@ public class Prompter {
         print(message);
     }
 
-    public void display(String message, Object... params)
+    public String getString() throws IOException{
+        return mReader.readLine();
+    }
+
+    public int getInt() throws IOException
     {
-        print(message, params);
-    }
-
-    public String getString() {
-        return mScanner.next();
-    }
-
-    public int getInt()
-    {
-        return mScanner.nextInt();
-    }
-
-    public void close() {
-        mScanner.close();
+        String option = mReader.readLine();
+        return Integer.parseInt(option);
     }
 
     private void print(String message)

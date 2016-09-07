@@ -1,6 +1,7 @@
 package com.teamtreehouse.model;
 
 import com.mera.model.Team;
+import com.sun.deploy.util.StringUtils;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -98,8 +99,12 @@ public class Menu {
         mPrompter.display("\n");
         mPrompter.display("\n");
 
+        mPrompter.display(String.format("%4s%-25s%-20s", "   ", "Player Name", "Player Height"));
+        mPrompter.display("\n");
+        mPrompter.display("\n");
+
         numberedPlayers.forEach((number, player) -> {
-            mPrompter.display(number + ") " + player.getLastName() + ", " + player.getFirstName() + '\t' + player.getHeightInInches());
+            mPrompter.display(String.format("%4s%-30s%-1s", number + ") " ,player.getLastName() + player.getFirstName(), player.getHeightInInches()));
             mPrompter.display("\n");
         });
 
@@ -155,8 +160,12 @@ public class Menu {
         mPrompter.display("***** League Balance Report *****");
         mPrompter.display("\n");
 
+        mPrompter.display(String.format("%-25s%-20s%-10s", "Team Name", "Experienced", "Inexperienced"));
+        mPrompter.display("\n");
+        mPrompter.display("\n");
+
         teams.forEach(team -> {
-            mPrompter.display(team.getName() + " " + team.getExperiencedPlayersCount() + " " + team.getInexperiencedPlayersCount());
+            mPrompter.display(String.format("%-30s%-10s%12s",team.getName(), team.getExperiencedPlayersCount(),team.getInexperiencedPlayersCount()));
             mPrompter.display("\n");
         });
 
@@ -178,14 +187,18 @@ public class Menu {
         mPrompter.display("\n");
     }
 
-    public void displayTeamRoster(Map<Integer, Player> numberedPlayers) {
+    public void displayTeamRoster(Set<Player> players) {
 
         mPrompter.display("***** Team Roster *****");
         mPrompter.display("\n");
         mPrompter.display("\n");
 
-        numberedPlayers.forEach((number, player) -> {
-            mPrompter.display(number + ") " + player.getLastName() + ", " + player.getFirstName() + '\t' + player.getHeightInInches());
+        mPrompter.display(String.format("%-30s%-20s", "Player Name", "Player Height"));
+        mPrompter.display("\n");
+        mPrompter.display("\n");
+
+        players.forEach((player) -> {
+            mPrompter.display(String.format("%-30s%-20s",player.getLastName() + ", " + player.getFirstName(), player.getHeightInInches()));
             mPrompter.display("\n");
         });
 

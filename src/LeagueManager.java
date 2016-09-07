@@ -116,8 +116,8 @@ public class LeagueManager {
                     if (team == null)
                         break;
 
-                    Map<Integer, Player> numberedPlayers = Players.mapByName(team.getPlayers());
-                    leagueMenu.displayTeamRoster(numberedPlayers);
+                    team.getPlayers();
+                    leagueMenu.displayTeamRoster(team.getPlayers());
                     break;
                 case 7:
                     System.out.println("Exiting...");
@@ -125,7 +125,7 @@ public class LeagueManager {
                 default:
                     break;
             }
-        } while (optionSelected != 6);
+        } while (optionSelected != 7);
     }
 
     private static Team selectTeam(Menu leagueMenu, Map<Integer, Team> numberedTeams) {

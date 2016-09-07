@@ -60,9 +60,10 @@ public class Team implements Comparable<Team>{
         return 0;
     }
 
-    public void removePlayer(Player player) {
+    public boolean removePlayer(Player player) {
 
-        mPlayers.remove(player);
+        boolean removed = mPlayers.remove(player);
+        return removed;
     }
 
     public List<Player> groupByHeight() {
@@ -80,7 +81,7 @@ public class Team implements Comparable<Team>{
                 .count();
     }
 
-    public long getUnexperiencedPlayersCount() {
+    public long getInexperiencedPlayersCount() {
 
         return mPlayers.stream()
                 .filter(player -> !player.isPreviousExperience())

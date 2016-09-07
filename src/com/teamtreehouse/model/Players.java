@@ -1,5 +1,9 @@
 package com.teamtreehouse.model;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 public class Players {
 
   public static Player[] load() {
@@ -40,5 +44,13 @@ public class Players {
     };
 
   }
+
+    public static Map<Integer, Player> mapByName(Set<Player> players)
+    {
+        Map<Integer, Player> numberedPlayers = new HashMap<>();
+        players.forEach(player -> numberedPlayers.put(numberedPlayers.size() + 1, player));
+
+        return numberedPlayers;
+    }
 
 }

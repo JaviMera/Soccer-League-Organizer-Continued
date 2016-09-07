@@ -154,7 +154,10 @@ public class Menu {
         mPrompter.display("League Balance Report");
         mPrompter.display("\n");
 
-        teams.forEach(team -> mPrompter.display(team.getName() + " " + team.getExperiencedPlayersCount() + " " + team.getUnexperiencedPlayersCount()));
+        teams.forEach(team -> {
+            mPrompter.display(team.getName() + " " + team.getExperiencedPlayersCount() + " " + team.getInexperiencedPlayersCount());
+            mPrompter.display("\n");
+        });
     }
 
     public void displayAddPlayerFailure(Player player) {
@@ -162,6 +165,13 @@ public class Menu {
         mPrompter.display("*****ERROR!!!*****");
         mPrompter.display("\n");
         mPrompter.display(player.getFirstName() + " " + player.getLastName() + " already exists in this team!.");
+        mPrompter.display("\n");
+    }
+
+    public void displayRemovePlayerFailure() {
+        mPrompter.display("*****ERROR!!!*****");
+        mPrompter.display("\n");
+        mPrompter.display("Player does not exist in this team.");
         mPrompter.display("\n");
     }
 }

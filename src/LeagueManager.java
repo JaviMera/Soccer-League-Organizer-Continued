@@ -14,7 +14,7 @@ public class LeagueManager {
         Menu leagueMenu = new Menu(new InputStreamReader(System.in));
         Set<Team> teams = new TreeSet<>();
         Player[] players = Players.load();
-        Set<Player> sortedPlayers = new TreeSet<Player>(Arrays.asList(players));
+        Set<Player> sortedPlayers = new TreeSet<>(Arrays.asList(players));
 
         System.out.printf("There are currently %d registered players.%n", players.length);
 
@@ -58,6 +58,9 @@ public class LeagueManager {
                     if (!added) {
                         leagueMenu.displayAddPlayerFailure(player);
                     }
+                    else{
+                        sortedPlayers.remove(player);
+                    }
 
                     break;
                 case 3:
@@ -79,8 +82,12 @@ public class LeagueManager {
                     leagueMenu.displayRemovedPlayer(player, team);
                     playerRemoved = team.removePlayer(player);
 
-                    if(!playerRemoved)
+                    if(!playerRemoved) {
                         leagueMenu.displayRemovePlayerFailure();
+                    }
+                    else {
+                        sortedPlayers.add(player);
+                    }
 
                     break;
                 case 4:

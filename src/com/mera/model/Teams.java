@@ -9,6 +9,8 @@ import java.util.Set;
  */
 public class Teams {
 
+    public final static int MAX_PLAYERS = 11;
+
     public static Map<Integer, Team> mapByName(Set<Team> teams)
     {
         Map<Integer, Team> numberedTeams = new HashMap<>();

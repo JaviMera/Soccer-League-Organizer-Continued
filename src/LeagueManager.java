@@ -12,7 +12,7 @@ public class LeagueManager {
     public static void main(String[] args) {
 
         Menu leagueMenu = new Menu(new InputStreamReader(System.in));
-        Set<Team> teams = new TreeSet<>();
+        Set<Team> originalTeamSet = new TreeSet<>();
         Player[] players = Players.load();
         Set<Player> sortedPlayers = new TreeSet<>(Arrays.asList(players));
 
@@ -22,7 +22,7 @@ public class LeagueManager {
         int optionSelected;
         Team team;
         Player player;
-        Map<Integer, Team> numberedTeams = new HashMap<>();
+        Map<Integer, Team> mapTeamsWithOptions = new HashMap<>();
 
         do {
             leagueMenu.displayTitle();
@@ -31,18 +31,23 @@ public class LeagueManager {
 
             switch (optionSelected) {
                 case 1:
+
+                    if(originalTeamSet.size() == players.length / Teams.MAX_PLAYERS){
+                        leagueMenu.displayAddTeamFailure();
+                        break;
+                    }
                     String teamName = leagueMenu.getName("Enter team name: ");
                     String coachName = leagueMenu.getName("Enter coach name: ");
-                    teams.add(new Team(teamName, coachName));
-                    numberedTeams = Teams.mapByName(teams);
+                    originalTeamSet.add(new Team(teamName, coachName));
+                    mapTeamsWithOptions = Teams.mapByName(originalTeamSet);
                     break;
                 case 2:
-                    if (teams.isEmpty()) {
+                    if (originalTeamSet.isEmpty()) {
                         leagueMenu.displayEmptyTeamTitle();
                         break;
                     }
 
-                    team = selectTeam(leagueMenu, numberedTeams);
+                    team = selectTeam(leagueMenu, mapTeamsWithOptions);
 
                     if (team == null)
                         break;
@@ -63,12 +68,12 @@ public class LeagueManager {
 
                     break;
                 case 3:
-                    if (teams.isEmpty()) {
+                    if (originalTeamSet.isEmpty()) {
                         leagueMenu.displayEmptyTeamTitle();
                         break;
                     }
 
-                    team = selectTeam(leagueMenu, numberedTeams);
+                    team = selectTeam(leagueMenu, mapTeamsWithOptions);
 
                     if (team == null)
                         break;
@@ -90,7 +95,7 @@ public class LeagueManager {
                     break;
                 case 4:
 
-                    team = selectTeam(leagueMenu, numberedTeams);
+                    team = selectTeam(leagueMenu, mapTeamsWithOptions);
 
                     if (team == null)
                         break;
@@ -103,15 +108,15 @@ public class LeagueManager {
 
                     break;
                 case 5:
-                    leagueMenu.displayLeagueBalanceReport(teams);
+                    leagueMenu.displayLeagueBalanceReport(originalTeamSet);
                     break;
                 case 6:
-                    if (teams.isEmpty()) {
+                    if (originalTeamSet.isEmpty()) {
                         leagueMenu.displayEmptyTeamTitle();
                         break;
                     }
 
-                    team = selectTeam(leagueMenu, numberedTeams);
+                    team = selectTeam(leagueMenu, mapTeamsWithOptions);
 
                     if (team == null)
                         break;

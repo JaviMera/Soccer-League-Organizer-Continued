@@ -204,4 +204,12 @@ public class Menu {
 
         mPrompter.display("\n");
     }
+
+    public void displayAddTeamFailure() {
+
+        mPrompter.display("\n");
+        mPrompter.display("You have reached number of teams allowed in the league. Sorry :(");
+        mPrompter.display("\n");
+        mPrompter.display("\n");
+    }
 }

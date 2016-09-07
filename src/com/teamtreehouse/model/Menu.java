@@ -22,7 +22,8 @@ public class Menu {
         mOptions.put("3", "Remove player from team");
         mOptions.put("4", "View team report");
         mOptions.put("5", "View league balance report");
-        mOptions.put("6", "Exit");
+        mOptions.put("6", "View roster");
+        mOptions.put("7", "Exit");
     }
 
     public void displayTitle()
@@ -182,6 +183,20 @@ public class Menu {
         mPrompter.display("*****ERROR!!!*****");
         mPrompter.display("\n");
         mPrompter.display("Player does not exist in this team.");
+        mPrompter.display("\n");
+    }
+
+    public void displayTeamRoster(Map<Integer, Player> numberedPlayers) {
+
+        mPrompter.display("***** Team Roster *****");
+        mPrompter.display("\n");
+        mPrompter.display("\n");
+
+        numberedPlayers.forEach((number, player) -> {
+            mPrompter.display(number + ") " + player.getLastName() + ", " + player.getFirstName() + '\t' + player.getHeightInInches());
+            mPrompter.display("\n");
+        });
+
         mPrompter.display("\n");
     }
 }

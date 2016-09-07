@@ -104,6 +104,20 @@ public class LeagueManager {
                     leagueMenu.displayLeagueBalanceReport(teams);
                     break;
                 case 6:
+                    if(teams.isEmpty()) {
+                        leagueMenu.displayEmptyTeamTitle();
+                        break;
+                    }
+
+                    team = selectTeam(leagueMenu, numberedTeams);
+
+                    if(team == null)
+                        break;
+
+                    Map<Integer, Player> numberedPlayers = Players.mapByName(team.getPlayers());
+                    leagueMenu.displayTeamRoster(numberedPlayers);
+                    break;
+                case 7:
                     System.out.println("Exiting...");
                     break;
                 default:

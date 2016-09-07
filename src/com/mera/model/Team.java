@@ -34,9 +34,10 @@ public class Team implements Comparable<Team>{
         return mCoach;
     }
 
-    public void addPlayer(Player newPlayer)
+    public boolean addPlayer(Player newPlayer)
     {
-        mPlayers.add(newPlayer);
+        boolean added = mPlayers.add(newPlayer);
+        return added;
     }
 
     public Set<Player> getPlayers()

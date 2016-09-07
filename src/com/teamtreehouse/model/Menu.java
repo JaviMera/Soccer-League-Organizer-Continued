@@ -47,8 +47,13 @@ public class Menu {
         }
         catch(IOException ioe)
         {
-            mPrompter.display("Error reading option from the menu.");
-            ioe.printStackTrace();
+            mPrompter.display("Failed at getting the right data from the stream.");
+            mPrompter.display("\n");
+        }
+        catch(NumberFormatException nfe)
+        {
+            mPrompter.display("Enter a valid number next time.");
+            mPrompter.display("\n");
         }
 
         return -1;
@@ -63,7 +68,7 @@ public class Menu {
         }
         catch(IOException ioe)
         {
-            mPrompter.display("Error reading option from the menu.");
+            mPrompter.display("Failed at getting the right data from the stream.");
             ioe.printStackTrace();
         }
 
@@ -150,5 +155,13 @@ public class Menu {
         mPrompter.display("\n");
 
         teams.forEach(team -> mPrompter.display(team.getName() + " " + team.getExperiencedPlayersCount() + " " + team.getUnexperiencedPlayersCount()));
+    }
+
+    public void displayAddPlayerFailure(Player player) {
+
+        mPrompter.display("*****ERROR!!!*****");
+        mPrompter.display("\n");
+        mPrompter.display(player.getFirstName() + " " + player.getLastName() + " already exists in this team!.");
+        mPrompter.display("\n");
     }
 }

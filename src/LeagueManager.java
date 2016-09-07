@@ -18,9 +18,8 @@ public class LeagueManager {
         Player[] players = Players.load();
 
         System.out.printf("There are currently %d registered players.%n", players.length);
-        // Your code here!
-        int optionSelected;
 
+        int optionSelected;
         do {
             leagueMenu.displayTitle();
             leagueMenu.displayOptions();
@@ -42,11 +41,19 @@ public class LeagueManager {
 
                         Team team = selectTeam(teams, leagueMenu);
 
-                        Set<Player> orderedPlayers = sortPlayersByName(players);
-                        Player player = selectPlayer(orderedPlayers, leagueMenu);
+                        if(team != null) {
+                            Set<Player> orderedPlayers = sortPlayersByName(players);
+                            Player player = selectPlayer(orderedPlayers, leagueMenu);
 
-                        leagueMenu.displayAddedPlayer(player, team);
-                        team.addPlayer(player);
+                            if (player != null) {
+                                leagueMenu.displayAddedPlayer(player, team);
+                                boolean added = team.addPlayer(player);
+
+                                if (!added) {
+                                    leagueMenu.displayAddPlayerFailure(player);
+                                }
+                            }
+                        }
                     }
                     break;
                 case 3:
@@ -57,15 +64,27 @@ public class LeagueManager {
                     else {
 
                         Team team = selectTeam(teams, leagueMenu);
-                        Player player = selectPlayer(team.getPlayers(), leagueMenu);
 
-                        leagueMenu.displayRemovedPlayer(player, team);
-                        team.removePlayer(player);
+                        if(team != null)
+                        {
+                            Player player = selectPlayer(team.getPlayers(), leagueMenu);
+
+                            if(player != null)
+                            {
+                                leagueMenu.displayRemovedPlayer(player, team);
+                                team.removePlayer(player);
+                            }
+                        }
                     }
                     break;
                 case 4:
                     Team team = selectTeam(teams, leagueMenu);
-                    leagueMenu.displayTeamReport(team);
+
+                    if(team != null)
+                    {
+                        leagueMenu.displayTeamReport(team);
+                    }
+
                     break;
                 case 5:
                     leagueMenu.displayLeagueBalanceReport(teams);
@@ -74,10 +93,9 @@ public class LeagueManager {
                     System.out.println("Exiting...");
                     break;
                 default:
-                    System.out.println("Invalid option master of the mountains. Try again");
                     break;
             }
-        }while(optionSelected != 5);
+        }while(optionSelected != 6);
     }
 
     private static Team selectTeam(Set<Team> teams, Menu leagueMenu)
@@ -85,6 +103,9 @@ public class LeagueManager {
         Map<Integer, Team> numberedTeams = createTeamsMap(teams);
         leagueMenu.displayTeams(numberedTeams);
         int teamSelected = leagueMenu.getOption("Select a team: ");
+
+        if(teamSelected == -1 || (teamSelected < 0 && teamSelected >= teams.size()))
+            return null;
 
         return numberedTeams.get(teamSelected);
     }
@@ -94,6 +115,9 @@ public class LeagueManager {
         Map<Integer, Player> numberedPlayers = createPlayerMap(players);
         leagueMenu.displayPlayers(numberedPlayers);
         int playerSelected = leagueMenu.getOption("Select a player: ");
+
+        if(playerSelected == -1 || (playerSelected < 0 && playerSelected >= players.size()))
+            return null;
 
         return numberedPlayers.get(playerSelected);
     }

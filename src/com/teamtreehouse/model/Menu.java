@@ -132,6 +132,7 @@ public class Menu {
 
     public void displayTeamReport(Team team) {
 
+        // TODO- change this implementation to show ranges of height and player count that belong to that range
         mPrompter.display("Viewing a report for " + team.getName());
         mPrompter.display("\n");
 
@@ -164,7 +165,7 @@ public class Menu {
 
         mPrompter.display("*****ERROR!!!*****");
         mPrompter.display("\n");
-        mPrompter.display(player.getFirstName() + " " + player.getLastName() + " already exists in this team!.");
+        mPrompter.display(player.getFirstName() + " " + player.getLastName() + " can't be added.");
         mPrompter.display("\n");
     }
 

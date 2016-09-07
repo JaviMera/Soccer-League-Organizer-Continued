@@ -20,8 +20,6 @@ public class LeagueManager {
 
         boolean playerRemoved;
         int optionSelected;
-        int teamSelected;
-        int playerSelected;
         Team team;
         Player player;
         Map<Integer, Team> numberedTeams = new HashMap<>();

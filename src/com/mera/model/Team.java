@@ -17,7 +17,6 @@ public class Team implements Comparable<Team>{
     private String mName;
     private String mCoach;
     private Set<Player> mPlayers;
-    private String unexperiencedPlayersCount;
 
     public Team(String name, String coach)
     {
@@ -30,14 +29,8 @@ public class Team implements Comparable<Team>{
         return mName;
     }
 
-    public String getCoach() {
-        return mCoach;
-    }
-
-    public boolean addPlayer(Player newPlayer)
-    {
-        boolean added = mPlayers.add(newPlayer);
-        return added;
+    public boolean addPlayer(Player newPlayer) {
+        return mPlayers.size() != 11 && mPlayers.add(newPlayer);
     }
 
     public Set<Player> getPlayers()
@@ -62,8 +55,7 @@ public class Team implements Comparable<Team>{
 
     public boolean removePlayer(Player player) {
 
-        boolean removed = mPlayers.remove(player);
-        return removed;
+        return mPlayers.remove(player);
     }
 
     public List<Player> groupByHeight() {
@@ -77,7 +69,7 @@ public class Team implements Comparable<Team>{
     public long getExperiencedPlayersCount()
     {
         return mPlayers.stream()
-                .filter(player -> player.isPreviousExperience())
+                .filter(Player::isPreviousExperience)
                 .count();
     }
 

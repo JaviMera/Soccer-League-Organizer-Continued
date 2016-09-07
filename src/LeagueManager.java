@@ -37,19 +37,19 @@ public class LeagueManager {
                     numberedTeams = Teams.mapByName(teams);
                     break;
                 case 2:
-                    if(teams.isEmpty()) {
+                    if (teams.isEmpty()) {
                         leagueMenu.displayEmptyTeamTitle();
                         break;
                     }
 
                     team = selectTeam(leagueMenu, numberedTeams);
 
-                    if(team == null)
+                    if (team == null)
                         break;
 
                     player = selectPlayer(sortedPlayers, leagueMenu);
 
-                    if(player == null)
+                    if (player == null)
                         break;
 
                     leagueMenu.displayAddedPlayer(player, team);
@@ -57,35 +57,33 @@ public class LeagueManager {
 
                     if (!added) {
                         leagueMenu.displayAddPlayerFailure(player);
-                    }
-                    else{
+                    } else {
                         sortedPlayers.remove(player);
                     }
 
                     break;
                 case 3:
-                    if(teams.isEmpty()) {
+                    if (teams.isEmpty()) {
                         leagueMenu.displayEmptyTeamTitle();
                         break;
                     }
 
                     team = selectTeam(leagueMenu, numberedTeams);
 
-                    if(team == null)
+                    if (team == null)
                         break;
 
                     player = selectPlayer(team.getPlayers(), leagueMenu);
 
-                    if(player == null)
+                    if (player == null)
                         break;
 
                     leagueMenu.displayRemovedPlayer(player, team);
                     playerRemoved = team.removePlayer(player);
 
-                    if(!playerRemoved) {
+                    if (!playerRemoved) {
                         leagueMenu.displayRemovePlayerFailure();
-                    }
-                    else {
+                    } else {
                         sortedPlayers.add(player);
                     }
 
@@ -94,24 +92,28 @@ public class LeagueManager {
 
                     team = selectTeam(leagueMenu, numberedTeams);
 
-                    if(team == null)
+                    if (team == null)
                         break;
 
-                    leagueMenu.displayTeamReport(team);
+                    Map<String, List<Player>> playersByHeight = team.groupByHeight();
+                    Set<String> heightRanges = new TreeSet<>(playersByHeight.keySet());
+                    Map<String, String> playersByHeightRange = mapPlayersByHeightRange(heightRanges, playersByHeight);
+
+                    leagueMenu.displayTeamReport(heightRanges, playersByHeightRange);
 
                     break;
                 case 5:
                     leagueMenu.displayLeagueBalanceReport(teams);
                     break;
                 case 6:
-                    if(teams.isEmpty()) {
+                    if (teams.isEmpty()) {
                         leagueMenu.displayEmptyTeamTitle();
                         break;
                     }
 
                     team = selectTeam(leagueMenu, numberedTeams);
 
-                    if(team == null)
+                    if (team == null)
                         break;
 
                     Map<Integer, Player> numberedPlayers = Players.mapByName(team.getPlayers());
@@ -123,29 +125,44 @@ public class LeagueManager {
                 default:
                     break;
             }
-        }while(optionSelected != 6);
+        } while (optionSelected != 6);
     }
 
-    private static Team selectTeam(Menu leagueMenu, Map<Integer, Team> numberedTeams)
-    {
+    private static Team selectTeam(Menu leagueMenu, Map<Integer, Team> numberedTeams) {
         leagueMenu.displayTeams(numberedTeams);
         int teamSelected = leagueMenu.getOption("Select a team: ");
 
-        if(teamSelected == -1 || (teamSelected < 0 && teamSelected >= numberedTeams.size()))
+        if (teamSelected == -1 || (teamSelected < 0 && teamSelected >= numberedTeams.size()))
             return null;
 
         return numberedTeams.get(teamSelected);
     }
 
-    private static Player selectPlayer(Set<Player> players, Menu leagueMenu)
-    {
+    private static Player selectPlayer(Set<Player> players, Menu leagueMenu) {
         Map<Integer, Player> numberedPlayers = Players.mapByName(players);
         leagueMenu.displayPlayers(numberedPlayers);
         int playerSelected = leagueMenu.getOption("Select a player: ");
 
-        if(playerSelected == -1 || (playerSelected < 0 && playerSelected >= players.size()))
+        if (playerSelected == -1 || (playerSelected < 0 && playerSelected >= players.size()))
             return null;
 
         return numberedPlayers.get(playerSelected);
+    }
+
+    private static Map<String, String> mapPlayersByHeightRange(Set<String> heightRanges, Map<String, List<Player>> playersByHeight)
+    {
+        Map<String, String> playersByHeightRange = new HashMap<>();
+
+        String playerNames = "";
+        for (String key : heightRanges) {
+            for (Player p : playersByHeight.get(key)) {
+                playerNames += p.getLastName() + " " + p.getFirstName() + ", ";
+            }
+
+            playersByHeightRange.put(key, playerNames);
+            playerNames = "";
+        }
+
+        return playersByHeightRange;
     }
 }

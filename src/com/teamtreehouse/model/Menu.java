@@ -133,25 +133,17 @@ public class Menu {
         mPrompter.display("\n");
     }
 
-    public void displayTeamReport(Team team) {
+    public void displayTeamReport(Set<String> heightRanges, Map<String, String> playersHeightByRange) {
 
-        mPrompter.display("***** Viewing a report for " + team.getName() + " *****");
+        mPrompter.display("***** Team Report By Height *****");
         mPrompter.display("\n");
         mPrompter.display("\n");
 
-        String rangeTitle = "Player Height Range";
-        mPrompter.display(rangeTitle + "\t\t" + "Number of Players");
+        mPrompter.display("Player Height Range" + "\t\t" + "Players");
         mPrompter.display("\n");
 
-        Map<String, List<Player>> playersByHeight = team.groupByHeight();
-        Set<String> sortByKey = new TreeSet<>(team.groupByHeight().keySet());
-
-        sortByKey.forEach((key) -> {
-            List<Player> playerList = playersByHeight.get(key);
-            mPrompter.display(
-                    "\t" + key + "\t" +
-                    String.format("%1$" + rangeTitle.length() + "s", playerList.size()));
-
+        heightRanges.forEach((key) -> {
+            mPrompter.display("\t" + String.format("%-18s",key) + "\t" + String.format("%-20s", playersHeightByRange.get(key)));
             mPrompter.display("\n");
         });
 

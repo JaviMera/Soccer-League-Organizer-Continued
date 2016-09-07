@@ -2,11 +2,7 @@ package com.mera.model;
 
 import com.teamtreehouse.model.Player;
 
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 
 /**
  * Created by Javi on 9/6/2016.
@@ -58,12 +54,28 @@ public class Team implements Comparable<Team>{
         return mPlayers.remove(player);
     }
 
-    public List<Player> groupByHeight() {
+    public Map<String, List<Player>> groupByHeight() {
 
-        List<Player> playersByHeight = new ArrayList<>(mPlayers);
-        Collections.sort(playersByHeight, new HeightComparator());
+        Map<String, List<Player>> groupByHeight = new HashMap<>();
+        for(int range = 34 ; range < 50 ; range+=5)
+        {
+            List<Player> playersInRange = new ArrayList<>();
 
-        return playersByHeight;
+            int min = range + 1;
+            int max = min + 5 >= 50
+                    ? 50
+                    : min + 5;
+
+            mPlayers.forEach(player -> {
+                if(player.getHeightInInches() >= min && player.getHeightInInches() <= max )
+                    playersInRange.add(player);
+            });
+
+            groupByHeight.put(String.format("%d - %d", min, max), playersInRange);
+            range++;
+        }
+
+        return groupByHeight;
     }
 
     public long getExperiencedPlayersCount()

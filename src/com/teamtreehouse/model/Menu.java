@@ -77,7 +77,7 @@ public class Menu {
 
     public void displayTeams(Map<Integer, Team> teams) {
 
-        mPrompter.display("Available Teams:");
+        mPrompter.display("***** Available Teams *****");
         mPrompter.display("\n");
         teams.forEach((number, team) -> {
             mPrompter.display(number + ") " + team.getName());
@@ -93,7 +93,7 @@ public class Menu {
 
     public void displayPlayers(Map<Integer, Player> numberedPlayers) {
 
-        mPrompter.display("Available Players:");
+        mPrompter.display("***** Available Players *****");
         mPrompter.display("\n");
         mPrompter.display("\n");
 
@@ -101,6 +101,8 @@ public class Menu {
             mPrompter.display(number + ") " + player.getLastName() + ", " + player.getFirstName() + '\t' + player.getHeightInInches());
             mPrompter.display("\n");
         });
+
+        mPrompter.display("\n");
     }
 
     public void displayAddedPlayer(Player player, Team team) {
@@ -132,33 +134,40 @@ public class Menu {
 
     public void displayTeamReport(Team team) {
 
-        // TODO- change this implementation to show ranges of height and player count that belong to that range
-        mPrompter.display("Viewing a report for " + team.getName());
+        mPrompter.display("***** Viewing a report for " + team.getName() + " *****");
+        mPrompter.display("\n");
         mPrompter.display("\n");
 
-        List<Player> playersByHeight = team.groupByHeight();
+        String rangeTitle = "Player Height Range";
+        mPrompter.display(rangeTitle + "\t\t" + "Number of Players");
+        mPrompter.display("\n");
 
-        playersByHeight.forEach(player -> {
+        Map<String, List<Player>> playersByHeight = team.groupByHeight();
+        Set<String> sortByKey = new TreeSet<>(team.groupByHeight().keySet());
+
+        sortByKey.forEach((key) -> {
+            List<Player> playerList = playersByHeight.get(key);
             mPrompter.display(
-                player.getFirstName() +
-                " " +
-                player.getLastName() +
-                "\t" +
-                player.getHeightInInches());
+                    "\t" + key + "\t" +
+                    String.format("%1$" + rangeTitle.length() + "s", playerList.size()));
 
             mPrompter.display("\n");
         });
+
+        mPrompter.display("\n");
     }
 
     public void displayLeagueBalanceReport(Set<Team> teams) {
 
-        mPrompter.display("League Balance Report");
+        mPrompter.display("***** League Balance Report *****");
         mPrompter.display("\n");
 
         teams.forEach(team -> {
             mPrompter.display(team.getName() + " " + team.getExperiencedPlayersCount() + " " + team.getInexperiencedPlayersCount());
             mPrompter.display("\n");
         });
+
+        mPrompter.display("\n");
     }
 
     public void displayAddPlayerFailure(Player player) {

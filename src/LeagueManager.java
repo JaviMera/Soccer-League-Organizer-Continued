@@ -1,6 +1,6 @@
 import com.mera.model.Team;
 import com.mera.model.Teams;
-import com.teamtreehouse.model.Menu;
+import com.mera.model.Menu;
 import com.teamtreehouse.model.Player;
 import com.teamtreehouse.model.Players;
 
@@ -22,10 +22,10 @@ public class LeagueManager {
         int optionSelected;
         Team team;
         Player player;
-        Map<Integer, Team> mapTeamsWithOptions = new HashMap<>();
+        Map<Integer, Team> displayableTeams = new HashMap<>();
 
         do {
-            leagueMenu.displayTitle();
+            leagueMenu.displayTitle("***** WELCOME TO THE AMAZING SOCCER LEAGUE *****");
             leagueMenu.displayOptions();
             optionSelected = leagueMenu.getOption("Enter option: ");
 
@@ -33,95 +33,114 @@ public class LeagueManager {
                 case 1:
 
                     if(originalTeamSet.size() == players.length / Teams.MAX_PLAYERS){
-                        leagueMenu.displayAddTeamFailure();
+                        leagueMenu.displayError("You have reached number of teams allowed in the league. Sorry :(");
                         break;
                     }
                     String teamName = leagueMenu.getName("Enter team name: ");
                     String coachName = leagueMenu.getName("Enter coach name: ");
                     originalTeamSet.add(new Team(teamName, coachName));
-                    mapTeamsWithOptions = Teams.mapByName(originalTeamSet);
+                    displayableTeams = Teams.mapByName(originalTeamSet);
                     break;
                 case 2:
                     if (originalTeamSet.isEmpty()) {
-                        leagueMenu.displayEmptyTeamTitle();
+                        leagueMenu.displayError("There are currently no teams in the league.");
                         break;
                     }
 
-                    team = selectTeam(leagueMenu, mapTeamsWithOptions);
+                    leagueMenu.displayTitle("***** Available Teams *****");
+                    team = selectTeam(leagueMenu, displayableTeams);
 
-                    if (team == null)
+                    if (isNull(team)) {
+                        leagueMenu.displayError("Invalid selection. :(");
                         break;
+                    }
 
+                    if(team.isFull()){
+                        leagueMenu.displayError("Team is full. Can't add more players");
+                        break;
+                    }
+
+                    leagueMenu.displayTitle("***** Available Players *****");
                     player = selectPlayer(sortedPlayers, leagueMenu);
 
-                    if (player == null)
+                    if (isNull(player)){
+                        leagueMenu.displayError("Invalid selection. :(");
                         break;
+                    }
 
                     leagueMenu.displayAddedPlayer(player, team);
-                    boolean added = team.addPlayer(player);
+                    team.addPlayer(player);
 
-                    if (!added) {
-                        leagueMenu.displayAddPlayerFailure(player);
-                    } else {
-                        sortedPlayers.remove(player);
-                    }
+                    // Remove player from available list
+                    sortedPlayers.remove(player);
 
                     break;
                 case 3:
                     if (originalTeamSet.isEmpty()) {
-                        leagueMenu.displayEmptyTeamTitle();
+                        leagueMenu.displayError("There are currently no teams in the league.");
                         break;
                     }
 
-                    team = selectTeam(leagueMenu, mapTeamsWithOptions);
+                    leagueMenu.displayTitle("***** Available Teams *****");
+                    team = selectTeam(leagueMenu, displayableTeams);
 
-                    if (team == null)
+                    if (isNull(team)) {
+                        leagueMenu.displayError("Invalid selection. :(");
                         break;
+                    }
 
+                    leagueMenu.displayTitle("***** Available Players *****", String.format("%4s%-25s%-20s", "   ", "Player Name", "Player Height") );
                     player = selectPlayer(team.getPlayers(), leagueMenu);
 
-                    if (player == null)
+                    if (isNull(player)) {
+                        leagueMenu.displayError("Invalid selection. :(");
                         break;
+                    }
 
                     leagueMenu.displayRemovedPlayer(player, team);
-                    playerRemoved = team.removePlayer(player);
+                    team.removePlayer(player);
 
-                    if (!playerRemoved) {
-                        leagueMenu.displayRemovePlayerFailure();
-                    } else {
-                        sortedPlayers.add(player);
-                    }
+                    // Add player back to available list
+                    sortedPlayers.add(player);
 
                     break;
                 case 4:
 
-                    team = selectTeam(leagueMenu, mapTeamsWithOptions);
+                    leagueMenu.displayTitle("***** Available Teams *****");
+                    team = selectTeam(leagueMenu, displayableTeams);
 
-                    if (team == null)
+                    if (isNull(team)) {
+                        leagueMenu.displayError("Invalid selection. :(");
                         break;
+                    }
 
                     Map<String, List<Player>> playersByHeight = team.groupByHeight();
                     Set<String> heightRanges = new TreeSet<>(playersByHeight.keySet());
                     Map<String, Map<Integer, String>> playersByHeightRange = mapPlayersByHeightRange(heightRanges, playersByHeight);
 
+                    leagueMenu.displayTitle("***** Team Report By Height *****");
                     leagueMenu.displayTeamReport(heightRanges, playersByHeightRange);
 
                     break;
                 case 5:
+                    leagueMenu.displayTitle("***** League Balance Report *****");
                     leagueMenu.displayLeagueBalanceReport(originalTeamSet);
                     break;
                 case 6:
                     if (originalTeamSet.isEmpty()) {
-                        leagueMenu.displayEmptyTeamTitle();
+                        leagueMenu.displayError("There are currently no teams in the league.");
                         break;
                     }
 
-                    team = selectTeam(leagueMenu, mapTeamsWithOptions);
+                    leagueMenu.displayTitle("***** Available Teams *****");
+                    team = selectTeam(leagueMenu, displayableTeams);
 
-                    if (team == null)
+                    if (isNull(team)){
+                        leagueMenu.displayError("Invalid selection. :(");
                         break;
+                    }
 
-                    team.getPlayers();
+                    leagueMenu.displayTitle("***** Team Roster *****");
                     leagueMenu.displayTeamRoster(team.getPlayers());
                     break;
                 case 7:
@@ -144,7 +163,7 @@ public class LeagueManager {
     }
 
     private static Player selectPlayer(Set<Player> players, Menu leagueMenu) {
-        Map<Integer, Player> numberedPlayers = Players.mapByName(players);
+        Map<Integer, Player> numberedPlayers = mapByName(players);
         leagueMenu.displayPlayers(numberedPlayers);
         int playerSelected = leagueMenu.getOption("Select a player: ");
 
@@ -159,12 +178,18 @@ public class LeagueManager {
         Map<String, Map<Integer,String>> playersByHeightRange = new HashMap<>();
 
         String playerNames = "";
+        String delimeter = ", ";
         for (String key : heightRanges) {
             for (Player p : playersByHeight.get(key)) {
-                playerNames += p.getLastName() + " " + p.getFirstName() + ", ";
+                playerNames += p.getLastName() + " " + p.getFirstName() + delimeter;
             }
 
+            if(!playerNames.isEmpty())
+                // Subtract 3 due to the last two characters being ',' and ' ', and cut it on the character before the comma.
+                playerNames = playerNames.substring(0, playerNames.length() - delimeter.length() - 1);
+
             Map<Integer, String> heightCount = new HashMap<>();
+
             heightCount.put(playersByHeight.get(key).size(), playerNames);
 
             playersByHeightRange.put(key, heightCount);
@@ -172,5 +197,18 @@ public class LeagueManager {
         }
 
         return playersByHeightRange;
+    }
+
+    private static boolean isNull(Object team)
+    {
+        return team == null;
+    }
+
+    public static Map<Integer, Player> mapByName(Set<Player> players)
+    {
+        Map<Integer, Player> numberedPlayers = new HashMap<>();
+        players.forEach(player -> numberedPlayers.put(numberedPlayers.size() + 1, player));
+
+        return numberedPlayers;
     }
 }

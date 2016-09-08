@@ -1,7 +1,6 @@
-package com.teamtreehouse.model;
+package com.mera.model;
 
-import com.mera.model.Team;
-import com.sun.deploy.util.StringUtils;
+import com.teamtreehouse.model.Player;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -27,9 +26,19 @@ public class Menu {
         mOptions.put("7", "Exit");
     }
 
-    public void displayTitle()
+    public void displayTitle(String header)
     {
-        mPrompter.display("***** WELCOME TO THE AMAZING SOCCER LEAGUE *****");
+        mPrompter.display("\n");
+        mPrompter.display(header);
+        mPrompter.display("\n");
+        mPrompter.display("\n");
+    }
+
+    public void displayTitle(String header, String subtitle)
+    {
+        displayTitle(header);
+
+        mPrompter.display(subtitle);
         mPrompter.display("\n");
         mPrompter.display("\n");
     }
@@ -39,6 +48,13 @@ public class Menu {
             mPrompter.display(menuOption + ") " + optionDescription);
             mPrompter.display("\n");
         });
+    }
+
+    public void displayError( String message)
+    {
+        displayTitle("*****ERROR!!!*****");
+        mPrompter.display(message);
+        mPrompter.display("\n");
     }
 
     public int getOption(String message) {
@@ -71,8 +87,7 @@ public class Menu {
         }
         catch(IOException ioe)
         {
-            mPrompter.display("Failed at getting the right data from the stream.");
-            ioe.printStackTrace();
+            mPrompter.display("Failed at getting the word entered.");
         }
 
         return null;
@@ -80,32 +95,17 @@ public class Menu {
 
     public void displayTeams(Map<Integer, Team> teams) {
 
-        mPrompter.display("***** Available Teams *****");
-        mPrompter.display("\n");
         teams.forEach((number, team) -> {
             mPrompter.display(number + ") " + team.getName());
             mPrompter.display("\n");
         });
     }
 
-    public void displayEmptyTeamTitle() {
-
-        mPrompter.display("There are currently no teams in the league.");
-        mPrompter.display("\n");
-    }
-
     public void displayPlayers(Map<Integer, Player> numberedPlayers) {
 
-        mPrompter.display("***** Available Players *****");
-        mPrompter.display("\n");
-        mPrompter.display("\n");
-
-        mPrompter.display(String.format("%4s%-25s%-20s", "   ", "Player Name", "Player Height"));
-        mPrompter.display("\n");
-        mPrompter.display("\n");
-
+        displayTitle(String.format("%4s%-25s%-20s", "   ", "Player Name", "Player Height"));
         numberedPlayers.forEach((number, player) -> {
-            mPrompter.display(String.format("%4s%-30s%-1s", number + ") " ,player.getLastName() + player.getFirstName(), player.getHeightInInches()));
+            mPrompter.display(String.format("%4s%-30s%-1s", number + ") " ,player.getLastName() + ", " + player.getFirstName(), player.getHeightInInches()));
             mPrompter.display("\n");
         });
 
@@ -114,42 +114,20 @@ public class Menu {
 
     public void displayAddedPlayer(Player player, Team team) {
 
-        mPrompter.display(
-            "Adding " +
-            player.getFirstName() +
-            " " +
-            player.getLastName() +
-            " to " +
-            team.getName() +
-            "!");
-
+        mPrompter.display("Adding " + formatName(player) + " to " + team.getName() + "!");
         mPrompter.display("\n");
     }
 
     public void displayRemovedPlayer(Player player, Team team) {
-        mPrompter.display(
-            "Removing " +
-            player.getFirstName() +
-            " " +
-            player.getLastName() +
-            " from " +
-            team.getName() +
-            ".");
 
+        mPrompter.display("Removing " + formatName(player) + " from " + team.getName() + ".");
         mPrompter.display("\n");
     }
 
     public void displayTeamReport(Set<String> heightRanges, Map<String, Map<Integer, String>> playersHeightByRange) {
 
-        mPrompter.display("***** Team Report By Height *****");
-        mPrompter.display("\n");
-        mPrompter.display("\n");
-
-        mPrompter.display(String.format("%-30s%-20s%-50s","Player Height Range", "Player Count", "Players"));
-        mPrompter.display("\n");
-
+        displayTitle(String.format("%-30s%-20s%-50s","Player Height Range", "Player Count", "Players"));
         heightRanges.forEach((key) -> {
-
             playersHeightByRange.get(key).forEach((count, playerNames) -> {
                 mPrompter.display(String.format("%-3s%-32s%-15s%-50s", "   ", key, count, playerNames));
                 mPrompter.display("\n");
@@ -161,14 +139,7 @@ public class Menu {
 
     public void displayLeagueBalanceReport(Set<Team> teams) {
 
-        mPrompter.display("***** League Balance Report *****");
-        mPrompter.display("\n");
-        mPrompter.display("\n");
-
-        mPrompter.display(String.format("%-25s%-20s%-20s%-15s", "Team Name", "Experienced", "Inexperienced", "Experience Avr"));
-        mPrompter.display("\n");
-        mPrompter.display("\n");
-
+        displayTitle(String.format("%-25s%-20s%-20s%-15s", "Team Name", "Experienced", "Inexperienced", "Experience Avr"));
         teams.forEach(team -> {
             mPrompter.display(String.format("%-30s%-21s%-21s%-10s",team.getName(), team.getExperiencedPlayersCount(),team.getInexperiencedPlayersCount(), team.getExperienceAverage()));
             mPrompter.display("\n");
@@ -177,44 +148,19 @@ public class Menu {
         mPrompter.display("\n");
     }
 
-    public void displayAddPlayerFailure(Player player) {
-
-        mPrompter.display("*****ERROR!!!*****");
-        mPrompter.display("\n");
-        mPrompter.display(player.getFirstName() + " " + player.getLastName() + " can't be added.");
-        mPrompter.display("\n");
-    }
-
-    public void displayRemovePlayerFailure() {
-        mPrompter.display("*****ERROR!!!*****");
-        mPrompter.display("\n");
-        mPrompter.display("Player does not exist in this team.");
-        mPrompter.display("\n");
-    }
-
     public void displayTeamRoster(Set<Player> players) {
 
-        mPrompter.display("***** Team Roster *****");
-        mPrompter.display("\n");
-        mPrompter.display("\n");
-
-        mPrompter.display(String.format("%-30s%-20s", "Player Name", "Player Height"));
-        mPrompter.display("\n");
-        mPrompter.display("\n");
-
+        displayTitle(String.format("%4s%-25s%-20s", "   ", "Player Name", "Player Height"));
         players.forEach((player) -> {
-            mPrompter.display(String.format("%-30s%-20s",player.getLastName() + ", " + player.getFirstName(), player.getHeightInInches()));
+            mPrompter.display(String.format("%-30s%-20s", formatName(player), player.getHeightInInches()));
             mPrompter.display("\n");
         });
 
         mPrompter.display("\n");
     }
 
-    public void displayAddTeamFailure() {
-
-        mPrompter.display("\n");
-        mPrompter.display("You have reached number of teams allowed in the league. Sorry :(");
-        mPrompter.display("\n");
-        mPrompter.display("\n");
+    private String formatName(Player player)
+    {
+        return player.getLastName() + ",  " + player.getFirstName();
     }
 }

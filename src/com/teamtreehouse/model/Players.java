@@ -42,15 +42,5 @@ public class Players {
       new Player("Johnny", "Thunder", 47, false),
       new Player("Ryan", "Creedson", 43, false)
     };
-
   }
-
-    public static Map<Integer, Player> mapByName(Set<Player> players)
-    {
-        Map<Integer, Player> numberedPlayers = new HashMap<>();
-        players.forEach(player -> numberedPlayers.put(numberedPlayers.size() + 1, player));
-
-        return numberedPlayers;
-    }
-
 }

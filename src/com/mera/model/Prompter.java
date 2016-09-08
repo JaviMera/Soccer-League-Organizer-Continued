@@ -1,4 +1,4 @@
-package com.teamtreehouse.model;
+package com.mera.model;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,10 +30,5 @@ public class Prompter {
     private void print(String message)
     {
         System.out.printf(message);
-    }
-
-    private void print(String message, Object...args)
-    {
-        System.out.printf(message, args);
     }
 }

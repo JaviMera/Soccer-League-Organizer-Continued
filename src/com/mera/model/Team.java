@@ -98,4 +98,8 @@ public class Team implements Comparable<Team>{
 
         return Math.round(experiencedPlayers / mPlayers.size() * 100);
     }
+
+    public boolean isFull() {
+        return mPlayers.size() == Teams.MAX_PLAYERS;
+    }
 }

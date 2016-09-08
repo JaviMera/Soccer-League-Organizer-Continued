@@ -2,7 +2,12 @@ package com.mera.model;
 
 import com.teamtreehouse.model.Player;
 
-import java.util.*;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Created by Javi on 9/6/2016.
@@ -80,16 +85,24 @@ public class Team implements Comparable<Team>{
 
     public long getExperiencedPlayersCount()
     {
-        return mPlayers.stream()
-                .filter(Player::isPreviousExperience)
-                .count();
+        List<Player> expPlayers = new ArrayList<>();
+        mPlayers.forEach(player -> {
+            if(player.isPreviousExperience())
+                expPlayers.add(player);
+        });
+
+        return expPlayers.size();
     }
 
     public long getInexperiencedPlayersCount() {
 
-        return mPlayers.stream()
-                .filter(player -> !player.isPreviousExperience())
-                .count();
+        List<Player> players = new ArrayList<>();
+        mPlayers.forEach(player -> {
+            if(!player.isPreviousExperience())
+                players.add(player);
+        });
+
+        return players.size();
     }
 
     public float getExperienceAverage()

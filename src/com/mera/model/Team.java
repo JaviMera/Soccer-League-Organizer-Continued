@@ -96,6 +96,6 @@ public class Team implements Comparable<Team>{
     {
         float experiencedPlayers = getExperiencedPlayersCount();
 
-        return experiencedPlayers / mPlayers.size() * 100;
+        return Math.round(experiencedPlayers / mPlayers.size() * 100);
     }
 }

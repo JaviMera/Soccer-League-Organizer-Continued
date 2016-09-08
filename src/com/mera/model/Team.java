@@ -91,4 +91,11 @@ public class Team implements Comparable<Team>{
                 .filter(player -> !player.isPreviousExperience())
                 .count();
     }
+
+    public float getExperienceAverage()
+    {
+        float experiencedPlayers = getExperiencedPlayersCount();
+
+        return experiencedPlayers / mPlayers.size() * 100;
+    }
 }

@@ -31,6 +31,7 @@ public class Menu {
     {
         mPrompter.display("***** WELCOME TO THE AMAZING SOCCER LEAGUE *****");
         mPrompter.display("\n");
+        mPrompter.display("\n");
     }
 
     public void displayOptions() {
@@ -159,13 +160,14 @@ public class Menu {
 
         mPrompter.display("***** League Balance Report *****");
         mPrompter.display("\n");
+        mPrompter.display("\n");
 
-        mPrompter.display(String.format("%-25s%-20s%-10s", "Team Name", "Experienced", "Inexperienced"));
+        mPrompter.display(String.format("%-25s%-20s%-20s%-15s", "Team Name", "Experienced", "Inexperienced", "Experience Avr"));
         mPrompter.display("\n");
         mPrompter.display("\n");
 
         teams.forEach(team -> {
-            mPrompter.display(String.format("%-30s%-10s%12s",team.getName(), team.getExperiencedPlayersCount(),team.getInexperiencedPlayersCount()));
+            mPrompter.display(String.format("%-30s%-21s%-21s%-10s",team.getName(), team.getExperiencedPlayersCount(),team.getInexperiencedPlayersCount(), team.getExperienceAverage()));
             mPrompter.display("\n");
         });
 

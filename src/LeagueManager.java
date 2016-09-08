@@ -102,7 +102,7 @@ public class LeagueManager {
 
                     Map<String, List<Player>> playersByHeight = team.groupByHeight();
                     Set<String> heightRanges = new TreeSet<>(playersByHeight.keySet());
-                    Map<String, String> playersByHeightRange = mapPlayersByHeightRange(heightRanges, playersByHeight);
+                    Map<String, Map<Integer, String>> playersByHeightRange = mapPlayersByHeightRange(heightRanges, playersByHeight);
 
                     leagueMenu.displayTeamReport(heightRanges, playersByHeightRange);
 
@@ -154,9 +154,9 @@ public class LeagueManager {
         return numberedPlayers.get(playerSelected);
     }
 
-    private static Map<String, String> mapPlayersByHeightRange(Set<String> heightRanges, Map<String, List<Player>> playersByHeight)
+    private static Map<String, Map<Integer,String>> mapPlayersByHeightRange(Set<String> heightRanges, Map<String, List<Player>> playersByHeight)
     {
-        Map<String, String> playersByHeightRange = new HashMap<>();
+        Map<String, Map<Integer,String>> playersByHeightRange = new HashMap<>();
 
         String playerNames = "";
         for (String key : heightRanges) {
@@ -164,7 +164,10 @@ public class LeagueManager {
                 playerNames += p.getLastName() + " " + p.getFirstName() + ", ";
             }
 
-            playersByHeightRange.put(key, playerNames);
+            Map<Integer, String> heightCount = new HashMap<>();
+            heightCount.put(playersByHeight.get(key).size(), playerNames);
+
+            playersByHeightRange.put(key, heightCount);
             playerNames = "";
         }
 

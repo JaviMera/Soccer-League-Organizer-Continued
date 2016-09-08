@@ -139,18 +139,21 @@ public class Menu {
         mPrompter.display("\n");
     }
 
-    public void displayTeamReport(Set<String> heightRanges, Map<String, String> playersHeightByRange) {
+    public void displayTeamReport(Set<String> heightRanges, Map<String, Map<Integer, String>> playersHeightByRange) {
 
         mPrompter.display("***** Team Report By Height *****");
         mPrompter.display("\n");
         mPrompter.display("\n");
 
-        mPrompter.display("Player Height Range" + "\t\t" + "Players");
+        mPrompter.display(String.format("%-30s%-20s%-50s","Player Height Range", "Player Count", "Players"));
         mPrompter.display("\n");
 
         heightRanges.forEach((key) -> {
-            mPrompter.display("\t" + String.format("%-18s",key) + "\t" + String.format("%-20s", playersHeightByRange.get(key)));
-            mPrompter.display("\n");
+
+            playersHeightByRange.get(key).forEach((count, playerNames) -> {
+                mPrompter.display(String.format("%-3s%-32s%-15s%-50s", "   ", key, count, playerNames));
+                mPrompter.display("\n");
+            });
         });
 
         mPrompter.display("\n");

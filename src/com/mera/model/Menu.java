@@ -17,13 +17,16 @@ public class Menu {
     public Menu(Reader reader) {
         mPrompter = new Prompter(reader);
         mOptions = new TreeMap<>();
+
         mOptions.put("1", "Create new team.");
         mOptions.put("2", "Add player to team");
-        mOptions.put("3", "Remove player from team");
-        mOptions.put("4", "View team report");
-        mOptions.put("5", "View league balance report");
-        mOptions.put("6", "View roster");
-        mOptions.put("7", "Exit");
+        mOptions.put("3", "Add player to waiting list");
+        mOptions.put("4", "Remove player from team");
+        mOptions.put("5", "Remove player from league");
+        mOptions.put("6", "View team report");
+        mOptions.put("7", "View league balance report");
+        mOptions.put("8", "View roster");
+        mOptions.put("9", "Exit");
     }
 
     public void displayTitle(String header)
@@ -57,7 +60,7 @@ public class Menu {
         mPrompter.display("\n");
     }
 
-    public int getOption(String message) {
+    public int getNumber(String message) {
 
         mPrompter.display(message);
         try
@@ -78,7 +81,7 @@ public class Menu {
         return -1;
     }
 
-    public String getName(String message) {
+    public String getString(String message) {
 
         mPrompter.display(message);
         try

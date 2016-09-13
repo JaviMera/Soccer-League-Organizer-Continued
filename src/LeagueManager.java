@@ -15,6 +15,7 @@ public class LeagueManager {
         Set<Team> originalTeamSet = new TreeSet<>();
         Player[] players = Players.load();
         Set<Player> sortedPlayers = new TreeSet<>(Arrays.asList(players));
+        Queue<Player> playerWaitlist = new LinkedList<>();
 
         System.out.printf("There are currently %d registered players.%n", players.length);
 
@@ -27,7 +28,7 @@ public class LeagueManager {
         do {
             leagueMenu.displayTitle("***** WELCOME TO THE AMAZING SOCCER LEAGUE *****");
             leagueMenu.displayOptions();
-            optionSelected = leagueMenu.getOption("Enter option: ");
+            optionSelected = leagueMenu.getNumber("Enter option: ");
 
             switch (optionSelected) {
                 case 1:
@@ -36,8 +37,8 @@ public class LeagueManager {
                         leagueMenu.displayError("You have reached number of teams allowed in the league. Sorry :(");
                         break;
                     }
-                    String teamName = leagueMenu.getName("Enter team name: ");
-                    String coachName = leagueMenu.getName("Enter coach name: ");
+                    String teamName = leagueMenu.getString("Enter team name: ");
+                    String coachName = leagueMenu.getString("Enter coach name: ");
                     originalTeamSet.add(new Team(teamName, coachName));
                     displayableTeams = Teams.mapByName(originalTeamSet);
                     break;
@@ -75,7 +76,21 @@ public class LeagueManager {
                     sortedPlayers.remove(player);
 
                     break;
+
                 case 3:
+                    leagueMenu.displayTitle("***** Adding a player to wait list *****");
+                    String firstName = leagueMenu.getString("Enter first name: ");
+                    String lastName = leagueMenu.getString("Enter last name: ");
+                    int height = leagueMenu.getNumber("Enter height: ");
+                    String isExperienced = leagueMenu
+                            .getString("Is player experienced? (Y/N): ")
+                            .toLowerCase();
+
+                    Player newPlayer = new Player(firstName, lastName, height, isExperienced.equals("y"));
+                    playerWaitlist.add(newPlayer);
+
+                    break;
+                case 4:
                     if (originalTeamSet.isEmpty()) {
                         leagueMenu.displayError("There are currently no teams in the league.");
                         break;
@@ -104,7 +119,27 @@ public class LeagueManager {
                     sortedPlayers.add(player);
 
                     break;
-                case 4:
+
+                case 5:
+                    // todo remove player from league
+                    leagueMenu.displayTitle("***** Removing a player from the league *****");
+                    player = selectPlayer(sortedPlayers, leagueMenu);
+
+                    if (isNull(player)) {
+                        leagueMenu.displayError("Invalid selection. :(");
+                        break;
+                    }
+
+                    sortedPlayers.remove(player);
+
+                    if(!playerWaitlist.isEmpty()){
+
+                        Player nextPlayer = playerWaitlist.poll();
+                        sortedPlayers.add(nextPlayer);
+                    }
+
+                    break;
+                case 6:
 
                     leagueMenu.displayTitle("***** Available Teams *****");
                     team = selectTeam(leagueMenu, displayableTeams);
@@ -122,11 +157,11 @@ public class LeagueManager {
                     leagueMenu.displayTeamReport(heightRanges, playersByHeightRange);
 
                     break;
-                case 5:
+                case 7:
                     leagueMenu.displayTitle("***** League Balance Report *****");
                     leagueMenu.displayLeagueBalanceReport(originalTeamSet);
                     break;
-                case 6:
+                case 8:
                     if (originalTeamSet.isEmpty()) {
                         leagueMenu.displayError("There are currently no teams in the league.");
                         break;
@@ -143,18 +178,18 @@ public class LeagueManager {
                     leagueMenu.displayTitle("***** Team Roster *****");
                     leagueMenu.displayTeamRoster(team.getPlayers());
                     break;
-                case 7:
+                case 9:
                     System.out.println("Exiting...");
                     break;
                 default:
                     break;
             }
-        } while (optionSelected != 7);
+        } while (optionSelected != 9);
     }
 
     private static Team selectTeam(Menu leagueMenu, Map<Integer, Team> numberedTeams) {
         leagueMenu.displayTeams(numberedTeams);
-        int teamSelected = leagueMenu.getOption("Select a team: ");
+        int teamSelected = leagueMenu.getNumber("Select a team: ");
 
         if (teamSelected == -1 || (teamSelected < 0 && teamSelected >= numberedTeams.size()))
             return null;
@@ -165,7 +200,7 @@ public class LeagueManager {
     private static Player selectPlayer(Set<Player> players, Menu leagueMenu) {
         Map<Integer, Player> numberedPlayers = mapByName(players);
         leagueMenu.displayPlayers(numberedPlayers);
-        int playerSelected = leagueMenu.getOption("Select a player: ");
+        int playerSelected = leagueMenu.getNumber("Select a player: ");
 
         if (playerSelected == -1 || (playerSelected < 0 && playerSelected >= players.size()))
             return null;

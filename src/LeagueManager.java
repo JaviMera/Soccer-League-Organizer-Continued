@@ -22,10 +22,12 @@ public class LeagueManager {
 
     public static void main(String[] args) {
 
+        int removedPlayers = 0;
         Menu leagueMenu = new Menu(new InputStreamReader(System.in));
         Set<Team> teams = new TreeSet<>();
         Player[] players = Players.load();
         Set<Player> sortedPlayers = new TreeSet<>(Arrays.asList(players));
+
         Queue<Player> playerWaitlist = new LinkedList<>();
 
         System.out.printf("There are currently %d registered players.%n", players.length);
@@ -44,7 +46,7 @@ public class LeagueManager {
 
                 case 1:
 
-                    if(teams.size() == players.length / Teams.MAX_PLAYERS){
+                    if (teams.size() == players.length / Teams.MAX_PLAYERS) {
                         leagueMenu.displayError("You have reached number of teams allowed in the league. Sorry :(");
                         break;
                     }
@@ -59,7 +61,7 @@ public class LeagueManager {
                         break;
                     }
 
-                    if(teamsFull(teams)){
+                    if (teamsFull(teams)) {
                         leagueMenu.displayError("All teams are full! Can't add to full teams ;D");
                         break;
                     }
@@ -70,7 +72,7 @@ public class LeagueManager {
                     teams.forEach(t -> {
                         int p = 0;
                         int max = Teams.MAX_PLAYERS - t.size();
-                        for(; p < max;) {
+                        for (; p < max; ) {
 
                             boolean canAdd = false;
                             int playerIndex = new Random().nextInt(sortedPlayers.size());
@@ -78,24 +80,20 @@ public class LeagueManager {
 
                             // Check in case the list is out of either experienced or inexperienced players.
                             // In this case you want to add no matter what the stats of a team are
-                            if (experiencedPlayers(listPlayers) == 0 || inexperiencedPlayers(listPlayers) == 0)
-                            {
+                            if (experiencedPlayers(listPlayers) == 0 || inexperiencedPlayers(listPlayers) == 0) {
                                 canAdd = true;
                             }
                             // If the list contains both experienced and inexperienced players, then check the stats of the team.
                             // If the current player will not make the team weaker or stronger by a large margin, then add it.
-                            else if((t.getExperienceAverage() <= 50.0f && randomPlayer.isPreviousExperience()) || (t.getExperienceAverage() > 50.0 && !randomPlayer.isPreviousExperience()))
-                            {
+                            else if ((t.getExperienceAverage() <= 50.0f && randomPlayer.isPreviousExperience()) || (t.getExperienceAverage() > 50.0 && !randomPlayer.isPreviousExperience())) {
                                 canAdd = true;
                             }
                             // There's a 65% chance that the system will still build unbalanced teams :D
-                            else if((new Random().nextInt(101)) >= 35)
-                            {
+                            else if ((new Random().nextInt(101)) >= 35) {
                                 canAdd = true;
                             }
 
-                            if(canAdd)
-                            {
+                            if (canAdd) {
                                 t.addPlayer(randomPlayer);
                                 listPlayers.remove(randomPlayer);
                                 sortedPlayers.remove(randomPlayer);
@@ -118,7 +116,7 @@ public class LeagueManager {
                         break;
                     }
 
-                    if(team.isFull()){
+                    if (team.isFull()) {
                         leagueMenu.displayError("Team is full. Can't add more players");
                         break;
                     }
@@ -126,12 +124,12 @@ public class LeagueManager {
                     leagueMenu.displayTitle("***** Available Players *****");
                     player = selectPlayer(sortedPlayers, leagueMenu);
 
-                    if (isNull(player)){
+                    if (isNull(player)) {
                         leagueMenu.displayError("Invalid selection. :(");
                         break;
                     }
 
-                    leagueMenu.displayAddedPlayer(player, team);
+                    leagueMenu.displayAddedPlayer(player, " was succesfully added to " + team.getName() + "!");
                     team.addPlayer(player);
 
                     // Remove player from available list
@@ -151,7 +149,19 @@ public class LeagueManager {
                     Player newPlayer = new Player(firstName, lastName, height, isExperienced.equals("y"));
                     playerWaitlist.add(newPlayer);
 
-                    leagueMenu.displayAddedPlayerInWaitlist(newPlayer);
+                    leagueMenu.displayAddedPlayer(newPlayer, " has been put into a waiting list.");
+
+                    for (int waitIndex = 0; waitIndex < removedPlayers; waitIndex++)
+                    {
+                        Player playerToMove = playerWaitlist.poll();
+                        sortedPlayers.add(playerToMove);
+                        removedPlayers--;
+                        leagueMenu.displayAddedPlayer(playerToMove, " was succesfully added to the league list!");
+
+                        if(playerWaitlist.isEmpty())
+                            break;
+                    }
+
                     break;
                 case 5:
                     if (teams.isEmpty()) {
@@ -175,7 +185,7 @@ public class LeagueManager {
                         break;
                     }
 
-                    leagueMenu.displayRemovedPlayer(player, team);
+                    leagueMenu.displayRemovedPlayer(player, "was removed from " + team.getName());
                     team.removePlayer(player);
 
                     // Add player back to available list
@@ -193,11 +203,15 @@ public class LeagueManager {
                     }
 
                     sortedPlayers.remove(player);
+                    leagueMenu.displayRemovedPlayer(player, " was removed from league!");
+                    removedPlayers++;
+
 
                     if(!playerWaitlist.isEmpty()){
 
                         Player nextPlayer = playerWaitlist.poll();
                         sortedPlayers.add(nextPlayer);
+                        removedPlayers--;
                     }
 
                     break;

@@ -116,15 +116,15 @@ public class Menu {
         mPrompter.display("\n");
     }
 
-    public void displayAddedPlayer(Player player, Team team) {
+    public void displayAddedPlayer(Player player, String message) {
 
-        mPrompter.display("Adding " + formatName(player) + " to " + team.getName() + "!");
+        mPrompter.display(formatName(player) + message);
         mPrompter.display("\n");
     }
 
-    public void displayRemovedPlayer(Player player, Team team) {
+    public void displayRemovedPlayer(Player player, String message) {
 
-        mPrompter.display("Removing " + formatName(player) + " from " + team.getName() + ".");
+        mPrompter.display(formatName(player) + message);
         mPrompter.display("\n");
     }
 
@@ -166,11 +166,5 @@ public class Menu {
     private String formatName(Player player)
     {
         return player.getLastName() + ",  " + player.getFirstName();
-    }
-
-    public void displayAddedPlayerInWaitlist(Player player) {
-
-        mPrompter.display("Adding " + formatName(player) + " to the wait list!");
-        mPrompter.display("\n");
     }
 }

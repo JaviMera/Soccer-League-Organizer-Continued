@@ -18,8 +18,8 @@ public class Menu {
         mPrompter = new Prompter(reader);
         mOptions = new HashMap<>();
 
-        mOptions.put("1", "Generate league");
-        mOptions.put("2", "Create new team.");
+        mOptions.put("1", "Create new team.");
+        mOptions.put("2", "Generate league");
         mOptions.put("3", "Add player to team");
         mOptions.put("4", "Add player to waiting list");
         mOptions.put("5", "Remove player from team");

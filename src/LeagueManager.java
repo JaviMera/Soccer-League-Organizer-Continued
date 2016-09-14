@@ -5,7 +5,6 @@ import com.teamtreehouse.model.Player;
 import com.teamtreehouse.model.Players;
 
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class LeagueManager {
@@ -13,7 +12,7 @@ public class LeagueManager {
     public static void main(String[] args) {
 
         Menu leagueMenu = new Menu(new InputStreamReader(System.in));
-        Set<Team> originalTeamSet = new TreeSet<>();
+        Set<Team> teams = new TreeSet<>();
         Player[] players = Players.load();
         Set<Player> sortedPlayers = new TreeSet<>(Arrays.asList(players));
         Queue<Player> playerWaitlist = new LinkedList<>();
@@ -34,14 +33,31 @@ public class LeagueManager {
             switch (optionSelected) {
 
                 case 1:
-                    if (originalTeamSet.isEmpty()) {
+
+                    if(teams.size() == players.length / Teams.MAX_PLAYERS){
+                        leagueMenu.displayError("You have reached number of teams allowed in the league. Sorry :(");
+                        break;
+                    }
+                    String teamName = leagueMenu.getString("Enter team name: ");
+                    String coachName = leagueMenu.getString("Enter coach name: ");
+                    teams.add(new Team(teamName, coachName));
+                    displayableTeams = Teams.mapByName(teams);
+                    break;
+                case 2:
+                    if (teams.isEmpty()) {
                         leagueMenu.displayError("There are currently no teams in the league.");
                         break;
                     }
 
+                    if(teamsFull(teams)){
+                        leagueMenu.displayError("All teams are full! Can't add to full teams ;D");
+                        break;
+                    }
+
+
                     List<Player> listPlayers = new ArrayList<>(sortedPlayers);
 
-                    originalTeamSet.forEach(t -> {
+                    teams.forEach(t -> {
                         int p = 0;
                         int max = Teams.MAX_PLAYERS - t.size();
                         for(; p < max;) {
@@ -78,19 +94,8 @@ public class LeagueManager {
                         }
                     });
                     break;
-                case 2:
-
-                    if(originalTeamSet.size() == players.length / Teams.MAX_PLAYERS){
-                        leagueMenu.displayError("You have reached number of teams allowed in the league. Sorry :(");
-                        break;
-                    }
-                    String teamName = leagueMenu.getString("Enter team name: ");
-                    String coachName = leagueMenu.getString("Enter coach name: ");
-                    originalTeamSet.add(new Team(teamName, coachName));
-                    displayableTeams = Teams.mapByName(originalTeamSet);
-                    break;
                 case 3:
-                    if (originalTeamSet.isEmpty()) {
+                    if (teams.isEmpty()) {
                         leagueMenu.displayError("There are currently no teams in the league.");
                         break;
                     }
@@ -139,7 +144,7 @@ public class LeagueManager {
                     leagueMenu.displayAddedPlayerInWaitlist(newPlayer);
                     break;
                 case 5:
-                    if (originalTeamSet.isEmpty()) {
+                    if (teams.isEmpty()) {
                         leagueMenu.displayError("There are currently no teams in the league.");
                         break;
                     }
@@ -206,10 +211,10 @@ public class LeagueManager {
                     break;
                 case 8:
                     leagueMenu.displayTitle("***** League Balance Report *****");
-                    leagueMenu.displayLeagueBalanceReport(originalTeamSet);
+                    leagueMenu.displayLeagueBalanceReport(teams);
                     break;
                 case 9:
-                    if (originalTeamSet.isEmpty()) {
+                    if (teams.isEmpty()) {
                         leagueMenu.displayError("There are currently no teams in the league.");
                         break;
                     }
@@ -232,6 +237,17 @@ public class LeagueManager {
                     break;
             }
         } while (optionSelected != 10);
+    }
+
+    private static boolean teamsFull(Set<Team> teams)
+    {
+        int count = 0;
+        for (Team team : teams) {
+            if(team.isFull())
+                count++;
+        }
+
+        return teams.size() == count;
     }
 
     private static int experiencedPlayers(List<Player> players)

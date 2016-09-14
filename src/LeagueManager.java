@@ -5,7 +5,18 @@ import com.teamtreehouse.model.Player;
 import com.teamtreehouse.model.Players;
 
 import java.io.InputStreamReader;
-import java.util.*;
+
+import java.util.Random;
+
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Queue;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
 
 public class LeagueManager {
 
@@ -19,7 +30,6 @@ public class LeagueManager {
 
         System.out.printf("There are currently %d registered players.%n", players.length);
 
-        boolean playerRemoved;
         int optionSelected;
         Team team;
         Player player;

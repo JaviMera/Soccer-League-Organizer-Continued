@@ -16,17 +16,18 @@ public class Menu {
 
     public Menu(Reader reader) {
         mPrompter = new Prompter(reader);
-        mOptions = new TreeMap<>();
+        mOptions = new HashMap<>();
 
-        mOptions.put("1", "Create new team.");
-        mOptions.put("2", "Add player to team");
-        mOptions.put("3", "Add player to waiting list");
-        mOptions.put("4", "Remove player from team");
-        mOptions.put("5", "Remove player from league");
-        mOptions.put("6", "View team report");
-        mOptions.put("7", "View league balance report");
-        mOptions.put("8", "View roster");
-        mOptions.put("9", "Exit");
+        mOptions.put("1", "Generate league");
+        mOptions.put("2", "Create new team.");
+        mOptions.put("3", "Add player to team");
+        mOptions.put("4", "Add player to waiting list");
+        mOptions.put("5", "Remove player from team");
+        mOptions.put("6", "Remove player from league");
+        mOptions.put("7", "View team report");
+        mOptions.put("8", "View league balance report");
+        mOptions.put("9", "View roster");
+        mOptions.put("10", "Exit");
     }
 
     public void displayTitle(String header)
@@ -165,5 +166,11 @@ public class Menu {
     private String formatName(Player player)
     {
         return player.getLastName() + ",  " + player.getFirstName();
+    }
+
+    public void displayAddedPlayerInWaitlist(Player player) {
+
+        mPrompter.display("Adding " + formatName(player) + " to the wait list!");
+        mPrompter.display("\n");
     }
 }

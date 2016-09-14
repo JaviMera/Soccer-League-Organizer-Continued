@@ -115,4 +115,8 @@ public class Team implements Comparable<Team>{
     public boolean isFull() {
         return mPlayers.size() == Teams.MAX_PLAYERS;
     }
+
+    public int size() {
+        return mPlayers.size();
+    }
 }

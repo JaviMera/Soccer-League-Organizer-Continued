@@ -5,6 +5,7 @@ import com.teamtreehouse.model.Player;
 import com.teamtreehouse.model.Players;
 
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class LeagueManager {
@@ -31,7 +32,53 @@ public class LeagueManager {
             optionSelected = leagueMenu.getNumber("Enter option: ");
 
             switch (optionSelected) {
+
                 case 1:
+                    if (originalTeamSet.isEmpty()) {
+                        leagueMenu.displayError("There are currently no teams in the league.");
+                        break;
+                    }
+
+                    List<Player> listPlayers = new ArrayList<>(sortedPlayers);
+
+                    originalTeamSet.forEach(t -> {
+                        int p = 0;
+                        int max = Teams.MAX_PLAYERS - t.size();
+                        for(; p < max;) {
+
+                            boolean canAdd = false;
+                            int playerIndex = new Random().nextInt(sortedPlayers.size());
+                            Player randomPlayer = listPlayers.get(playerIndex);
+
+                            // Check in case the list is out of either experienced or inexperienced players.
+                            // In this case you want to add no matter what the stats of a team are
+                            if (experiencedPlayers(listPlayers) == 0 || inexperiencedPlayers(listPlayers) == 0)
+                            {
+                                canAdd = true;
+                            }
+                            // If the list contains both experienced and inexperienced players, then check the stats of the team.
+                            // If the current player will not make the team weaker or stronger by a large margin, then add it.
+                            else if((t.getExperienceAverage() <= 50.0f && randomPlayer.isPreviousExperience()) || (t.getExperienceAverage() > 50.0 && !randomPlayer.isPreviousExperience()))
+                            {
+                                canAdd = true;
+                            }
+                            // There's a 65% chance that the system will still build unbalanced teams :D
+                            else if((new Random().nextInt(101)) >= 35)
+                            {
+                                canAdd = true;
+                            }
+
+                            if(canAdd)
+                            {
+                                t.addPlayer(randomPlayer);
+                                listPlayers.remove(randomPlayer);
+                                sortedPlayers.remove(randomPlayer);
+                                p++;
+                            }
+                        }
+                    });
+                    break;
+                case 2:
 
                     if(originalTeamSet.size() == players.length / Teams.MAX_PLAYERS){
                         leagueMenu.displayError("You have reached number of teams allowed in the league. Sorry :(");
@@ -42,7 +89,7 @@ public class LeagueManager {
                     originalTeamSet.add(new Team(teamName, coachName));
                     displayableTeams = Teams.mapByName(originalTeamSet);
                     break;
-                case 2:
+                case 3:
                     if (originalTeamSet.isEmpty()) {
                         leagueMenu.displayError("There are currently no teams in the league.");
                         break;
@@ -77,7 +124,7 @@ public class LeagueManager {
 
                     break;
 
-                case 3:
+                case 4:
                     leagueMenu.displayTitle("***** Adding a player to wait list *****");
                     String firstName = leagueMenu.getString("Enter first name: ");
                     String lastName = leagueMenu.getString("Enter last name: ");
@@ -89,8 +136,9 @@ public class LeagueManager {
                     Player newPlayer = new Player(firstName, lastName, height, isExperienced.equals("y"));
                     playerWaitlist.add(newPlayer);
 
+                    leagueMenu.displayAddedPlayerInWaitlist(newPlayer);
                     break;
-                case 4:
+                case 5:
                     if (originalTeamSet.isEmpty()) {
                         leagueMenu.displayError("There are currently no teams in the league.");
                         break;
@@ -120,8 +168,7 @@ public class LeagueManager {
 
                     break;
 
-                case 5:
-                    // todo remove player from league
+                case 6:
                     leagueMenu.displayTitle("***** Removing a player from the league *****");
                     player = selectPlayer(sortedPlayers, leagueMenu);
 
@@ -139,7 +186,7 @@ public class LeagueManager {
                     }
 
                     break;
-                case 6:
+                case 7:
 
                     leagueMenu.displayTitle("***** Available Teams *****");
                     team = selectTeam(leagueMenu, displayableTeams);
@@ -157,11 +204,11 @@ public class LeagueManager {
                     leagueMenu.displayTeamReport(heightRanges, playersByHeightRange);
 
                     break;
-                case 7:
+                case 8:
                     leagueMenu.displayTitle("***** League Balance Report *****");
                     leagueMenu.displayLeagueBalanceReport(originalTeamSet);
                     break;
-                case 8:
+                case 9:
                     if (originalTeamSet.isEmpty()) {
                         leagueMenu.displayError("There are currently no teams in the league.");
                         break;
@@ -178,13 +225,39 @@ public class LeagueManager {
                     leagueMenu.displayTitle("***** Team Roster *****");
                     leagueMenu.displayTeamRoster(team.getPlayers());
                     break;
-                case 9:
+                case 10:
                     System.out.println("Exiting...");
                     break;
                 default:
                     break;
             }
-        } while (optionSelected != 9);
+        } while (optionSelected != 10);
+    }
+
+    private static int experiencedPlayers(List<Player> players)
+    {
+        int count = 0;
+        for (Player player : players) {
+            if(player.isPreviousExperience())
+            {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    private static int inexperiencedPlayers(List<Player> players)
+    {
+        int count = 0;
+        for (Player player : players) {
+            if(!player.isPreviousExperience())
+            {
+                count++;
+            }
+        }
+
+        return count;
     }
 
     private static Team selectTeam(Menu leagueMenu, Map<Integer, Team> numberedTeams) {
